@@ -1,4 +1,4 @@
-import { faqs } from "@/lib/content";
+import { faqs, showroomLead } from "@/lib/content";
 import Hero from "@/components/sections/Hero";
 import LogoStrip from "@/components/sections/LogoStrip";
 import ProblemSolution from "@/components/sections/ProblemSolution";
@@ -27,12 +27,12 @@ export default function Home() {
       <LogoStrip />
       <ProblemSolution />
       <Benefits />
-      <TaglineReveal />
+      <TaglineReveal signedBy={`${showroomLead.name}, ${showroomLead.role}`} />
       <Collection />
       <HowItWorks />
       <Proof />
-      <Faq />
-      <FinalCta />
+      <Faq index="06" />
+      <FinalCta index="07" />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema).replace(/</g, "\\u003c") }}

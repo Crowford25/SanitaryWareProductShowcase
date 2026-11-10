@@ -104,7 +104,7 @@ export const collection = [
   },
   {
     name: "Linea mixers",
-    detail: "Slender brass mixers with a weighted lever and a ceramic disc cartridge.",
+    detail: "Slender solid brass mixers in four finishes, with a weighted lever and a ceramic disc cartridge.",
     price: "From RM 865",
     image: images.blackMixers,
     alt: "Wall mounted Linea mixers in matte black above two black vessel basins",
@@ -135,7 +135,7 @@ export const collection = [
 export const steps = [
   {
     icon: "calendar",
-    title: "Book a 45 minute consultation",
+    title: "Book a 45 minute consultation",
     body: "Meet us at the Bangsar showroom or on video. Bring a floor plan, a few photos, or just a rough idea.",
   },
   {
@@ -232,3 +232,60 @@ export const reassurances = [
   "30 day returns on unused stocked pieces",
   "15 year warranty on ceramics",
 ];
+
+/* ── Motion page (/motion) ─────────────────────────────── */
+
+export const motionHero = {
+  lines: ["One room.", "One finish.", "One team."],
+  sub: "Basins, mixers, baths, WCs and showers designed to match and planned around your floor plan. Your contractor gets the fitting drawings before tiling, so everything goes in right the first time.",
+};
+
+export const snapParts = [
+  { name: "Basin", icon: "basin", tint: "#c9a46a", from: { x: -60, y: -105, r: -14, s: 0.9 } },
+  { name: "Mixer", icon: "mixer", tint: "#8f8a80", from: { x: 45, y: 95, r: 11, s: 1.08 } },
+  { name: "Bath", icon: "bath", tint: "#7a5c32", from: { x: -20, y: -45, r: 17, s: 1 } },
+  { name: "WC", icon: "wc", tint: "#d8d2c4", from: { x: 65, y: 120, r: -9, s: 0.94 } },
+  { name: "Shower", icon: "shower", tint: "#3b3b39", from: { x: 25, y: -130, r: 13, s: 1.05 } },
+] as const;
+
+export const snapCopy = {
+  before: {
+    label: "The usual way",
+    title: "Five suppliers. Five finishes. Five lead times.",
+    caption: "Lead times from 2 to 9 weeks, across five deliveries",
+  },
+  after: {
+    label: "The Aurelia way",
+    title: "One studio. One finish. Fitted first time.",
+    body: "We plan every piece together, from the first sketch to the handover check, and stay accountable for how the whole room fits.",
+    caption: "One delivery in 19 working days, checked at handover",
+  },
+};
+
+export const leadBenefit = {
+  title: "One finish across the room",
+  body: "Mixers, shower set, towel rails and drain covers come from the same production batch, so the brass on your tap matches the brass on your shower.",
+};
+
+export const stepDeliverables = [
+  ["Showroom or video", "45 minutes", "No obligation"],
+  ["Layout", "Product list", "Rough in drawings", "Itemised quote"],
+  ["One delivery", "Handover check", "15 year warranty"],
+];
+
+/* ── Home page, editorial layout ───────────────────────── */
+
+/** The usual way: one row per supplier, as a homeowner would actually note it down. */
+export const ledger = [
+  { piece: "Basin", from: "Tile shop, Puchong", lead: "2 weeks", finish: "Gloss white" },
+  { piece: "Mixer", from: "Online marketplace", lead: "3 weeks", finish: "Gold, roughly" },
+  { piece: "Bath", from: "Showroom, Petaling Jaya", lead: "6 weeks", finish: "Matte white" },
+  { piece: "WC", from: "Contractor's supplier", lead: "1 week", finish: "Bright white" },
+  { piece: "Shower set", from: "Imported to order", lead: "9 weeks", finish: "Brushed gold" },
+];
+
+export const withAurelia = { piece: "Every piece", from: "Aurelia, Bangsar", lead: "19 working days", finish: "One matched finish" };
+
+export const stepWhen = ["Day 1", "By day 4", "Around week 5"];
+
+export const showroomLead = { name: "Mei Ling Tan", role: "Showroom lead, Bangsar" };

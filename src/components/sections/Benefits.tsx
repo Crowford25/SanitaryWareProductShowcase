@@ -1,93 +1,73 @@
 import Image from "next/image";
-import { ReceiptIcon, RulerIcon, ShieldCheckIcon, SwatchesIcon, TruckIcon } from "@phosphor-icons/react/ssr";
-import { benefits, finishes, images } from "@/lib/content";
-import { Container, SectionHeader } from "@/components/ui/Layout";
+import { benefits, finishes, images, leadBenefit } from "@/lib/content";
+import { Container, Rule } from "@/components/ui/Layout";
 import Reveal from "@/components/ui/Reveal";
 
-const icons = {
-  ruler: RulerIcon,
-  receipt: ReceiptIcon,
-  truck: TruckIcon,
-  shield: ShieldCheckIcon,
-};
-
-function IconBadge({ children }: { children: React.ReactNode }) {
-  return (
-    <span className="grid size-10 place-items-center rounded-full border border-line bg-ivory text-ink">{children}</span>
-  );
-}
+const items = [{ title: leadBenefit.title, body: leadBenefit.body, stat: null as string | null }, ...benefits];
 
 export default function Benefits() {
   return (
     <section aria-labelledby="benefits-title" className="bg-paper py-16 md:py-24">
-      <Container>
-        <Reveal>
-          <SectionHeader
-            id="benefits-title"
-            label="Why one studio"
-            title="What changes when one team plans the whole room"
-            description="You get one point of contact, one set of drawings and one finish, from the first sketch to the day your contractor hands over."
-          />
-        </Reveal>
-
-        <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {/* Lead benefit with product photo */}
-          <Reveal className="md:col-span-2 lg:col-span-2">
-            <article className="grid h-full gap-2 rounded-2xl border border-line bg-ivory p-2 sm:grid-cols-2">
-              <div className="flex flex-col p-4 md:p-6">
-                <IconBadge>
-                  <SwatchesIcon aria-hidden="true" size={20} />
-                </IconBadge>
-                <h3 className="mt-6 heading-6">One finish across the room</h3>
-                <p className="mt-2 body-6 text-muted">
-                  Mixers, shower set, towel rails and drain covers come from the same production batch, so the brass on
-                  your tap matches the brass on your shower.
-                </p>
-                <ul className="mt-auto flex flex-wrap gap-2 pt-6" aria-label="Available finishes">
-                  {finishes.map((f) => (
-                    <li
-                      key={f.name}
-                      className="flex items-center gap-2 rounded-full border border-line bg-paper py-1 pr-3 pl-1 caption-4 text-ink"
-                    >
-                      <span
-                        aria-hidden="true"
-                        className="size-4 rounded-full border border-ink/10"
-                        style={{ backgroundColor: f.color }}
-                      />
-                      {f.name}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div className="relative min-h-64 overflow-hidden rounded-lg bg-line">
+      <Container className="grid gap-12 lg:grid-cols-12 lg:gap-8">
+        {/* Photo stays put on the left while the list scrolls past it. */}
+        <div className="order-2 lg:order-1 lg:col-span-5">
+          <Reveal className="lg:sticky lg:top-24">
+            <figure>
+              <div className="relative aspect-[3/4] overflow-hidden rounded-lg bg-line">
                 <Image
                   src={images.brass}
                   alt="Two brushed brass Linea mixers and brass framed mirrors on a marble wall"
                   fill
-                  sizes="(min-width: 1024px) 400px, (min-width: 640px) 50vw, 100vw"
+                  sizes="(min-width: 1024px) 480px, 100vw"
                   className="object-cover"
                 />
               </div>
-            </article>
+              <figcaption className="mt-3 flex items-baseline justify-between gap-4 caption-5 text-muted">
+                <span className="caption-3 text-ink">Plate 02</span>
+                <span className="text-right">Linea mixers in brushed brass, from the same batch as the shower set</span>
+              </figcaption>
+            </figure>
+          </Reveal>
+        </div>
+
+        <div className="order-1 lg:order-2 lg:col-span-6 lg:col-start-7">
+          <Reveal>
+            <p className="caption-3 uppercase tracking-widest text-muted">
+              <span className="text-brass-deep">02</span>
+              <span aria-hidden="true"> · </span>
+              Why one studio
+            </p>
+            <h2 id="benefits-title" className="mt-4 heading-4 md:heading-3">
+              What changes when one team plans the whole room
+            </h2>
           </Reveal>
 
-          {benefits.map((b, i) => {
-            const Icon = icons[b.icon];
-            return (
-              <Reveal key={b.title} delay={(i + 1) * 60}>
-                <article className="flex h-full flex-col rounded-2xl border border-line bg-ivory p-6">
-                  <IconBadge>
-                    <Icon aria-hidden="true" size={20} />
-                  </IconBadge>
-                  <h3 className="mt-6 heading-6">{b.title}</h3>
-                  <p className="mt-2 body-6 text-muted">{b.body}</p>
-                  {b.stat ? (
-                    <p className="mt-6 w-fit rounded-full bg-brass/12 px-3 py-1 caption-4 text-brass-deep">{b.stat}</p>
-                  ) : null}
-                </article>
+          <ol className="mt-12">
+            {items.map((item, i) => (
+              <Reveal as="li" key={item.title} delay={i * 50}>
+                <Rule />
+                <div className="grid grid-cols-[40px_1fr] gap-4 py-6 md:grid-cols-[64px_1fr]">
+                  <span className="pt-1 caption-3 tracking-widest text-brass-deep">{String(i + 1).padStart(2, "0")}</span>
+                  <div>
+                    <h3 className="heading-6">{item.title}</h3>
+                    <p className="mt-2 max-w-[520px] body-3 text-muted">{item.body}</p>
+                    {i === 0 ? (
+                      <ul className="mt-4 flex flex-wrap gap-x-4 gap-y-2" aria-label="Available finishes">
+                        {finishes.map((f) => (
+                          <li key={f.name} className="flex items-center gap-2 caption-2 text-ink">
+                            <span aria-hidden="true" className="size-3 rounded-full border border-ink/10" style={{ backgroundColor: f.color }} />
+                            {f.name}
+                          </li>
+                        ))}
+                      </ul>
+                    ) : null}
+                    {item.stat ? <p className="mt-3 caption-1 text-brass-deep">{item.stat}</p> : null}
+                  </div>
+                </div>
               </Reveal>
-            );
-          })}
+            ))}
+          </ol>
+          <Rule />
         </div>
       </Container>
     </section>

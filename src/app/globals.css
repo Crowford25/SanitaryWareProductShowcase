@@ -20,6 +20,7 @@
 
   /* Dark surfaces (only the approved dark backgrounds) */
   --color-night: #131209;
+  --color-coal: #181818;
   --color-night-2: #1f1f1f;
   --color-night-3: #272727;
   --color-night-4: #313131;
@@ -142,10 +143,69 @@ details > summary::-webkit-details-marker { display: none; }
 
 details[open] .faq-answer { animation: faq-open 500ms var(--ease-soft); }
 
+/* ── Motion page ───────────────────────────────────────── */
+
+/* Headline lines rise out of a mask */
+@keyframes line-rise {
+  from { transform: translateY(110%); }
+  to { transform: none; }
+}
+.line-rise {
+  animation: line-rise 1100ms var(--ease-soft) both;
+  animation-delay: var(--enter-delay, 0ms);
+}
+
+/* Water ripples: ambient rings and one per tap */
+@keyframes ripple {
+  from { transform: translate(-50%, -50%) scale(0.12); opacity: 0.75; }
+  to { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+}
+.ripple-ring {
+  position: absolute;
+  border-radius: 9999px;
+  border: 1px solid color-mix(in srgb, var(--color-brass) 85%, transparent);
+  animation: ripple 7200ms var(--ease-soft) infinite both;
+  animation-delay: var(--ring-delay, 0ms);
+}
+.ripple-tap { animation: ripple 1600ms var(--ease-soft) forwards; }
+
+/* Odometer digits roll into place */
+.odo-col {
+  transform: translateY(calc(var(--d) * -10%));
+  transition: transform 1800ms var(--ease-soft);
+  transition-delay: var(--odo-delay, 0ms);
+}
+[data-odo="zero"] .odo-col { transform: none; transition: none; }
+
+/* Curtain: a panel lifts off the image while the photo settles */
+.curtain {
+  transform: translateY(-101%);
+  transition: transform 1200ms var(--ease-soft);
+  transition-delay: var(--curtain-delay, 0ms);
+}
+.curtain-img {
+  transition: transform 1600ms var(--ease-soft);
+  transition-delay: var(--curtain-delay, 0ms);
+}
+@media (scripting: enabled) {
+  [data-curtain]:not([data-shown]) .curtain { transform: none; }
+  [data-curtain]:not([data-shown]) .curtain-img { transform: scale(1.18); }
+}
+
+/* Snap together: final, static layout without JS or with reduced motion */
+@media (scripting: none) {
+  .scrub-section { height: auto !important; }
+  .scrub-sticky { position: static !important; height: auto !important; padding-block: 96px; }
+  .scrub-stack { gap: 48px; }
+  .scrub-stack > * { grid-area: auto !important; opacity: 1 !important; transform: none !important; }
+  .scrub-tint-a { opacity: 0 !important; }
+  .scrub-tint-b { opacity: 1 !important; }
+}
+
 /* ── Tagline words: full colour without JS ─────────────── */
 
 @media (scripting: none) {
-  .tagline-word { opacity: 1; }
+  .tagline-word { opacity: 1; translate: none; }
 }
 
 /* ── Reduced motion: no movement, plain opacity only ───── */
@@ -153,13 +213,24 @@ details[open] .faq-answer { animation: faq-open 500ms var(--ease-soft); }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
 
-  .tagline-word { opacity: 1; transition: none; }
+  .tagline-word { opacity: 1; translate: none; transition: none; }
 
   [data-reveal]:not([data-shown]) { transform: none; }
   [data-reveal] { transition: opacity 600ms var(--ease-soft); }
 
   @keyframes rise-in { from { opacity: 0; } to { opacity: 1; } }
   @keyframes faq-open { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes line-rise { from { opacity: 0; } to { opacity: 1; } }
+
+  .ripple-ring, .ripple-tap { display: none; }
+  .odo-col { transition: none; }
+  .curtain { display: none; }
+  .curtain-img { transform: none !important; transition: none; }
+
+  .scrub-section { height: auto !important; }
+  .scrub-sticky { position: static !important; height: auto !important; padding-block: 96px; }
+  .scrub-stack { gap: 48px; }
+  .scrub-stack > * { grid-area: auto !important; opacity: 1 !important; transform: none !important; }
 
   .motion-move { transition-property: opacity, background-color, color, border-color !important; }
 }

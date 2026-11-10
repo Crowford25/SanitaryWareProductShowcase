@@ -2,21 +2,24 @@ import { logos } from "@/lib/content";
 import { Container } from "@/components/ui/Layout";
 import Reveal from "@/components/ui/Reveal";
 
+/** Written as a sentence, the way a studio would mention who it works with. */
 export default function LogoStrip() {
   return (
     <section aria-labelledby="logos-title" className="pb-16 md:pb-24">
       <Container>
-        <Reveal className="rounded-3xl border border-line px-4 py-8 md:px-8">
-          <h2 id="logos-title" className="text-center caption-3 uppercase tracking-widest text-muted">
-            Specified by designers and hotels across Southeast Asia
+        <Reveal className="grid gap-4 lg:grid-cols-12 lg:gap-8">
+          <h2 id="logos-title" className="caption-3 uppercase tracking-widest text-muted lg:col-span-3 lg:pt-1">
+            Specified by
           </h2>
-          <ul className="mt-6 flex flex-wrap items-center justify-center gap-x-10 gap-y-4">
-            {logos.map((logo) => (
-              <li key={logo.name} className={`title-2 text-ink/55 ${logo.style}`}>
-                {logo.name}
-              </li>
+          <p className="max-w-[760px] title-1 text-muted lg:col-span-9">
+            {logos.map((logo, i) => (
+              <span key={logo.name}>
+                <span className="text-ink">{logo.name}</span>
+                {i < logos.length - 2 ? ", " : i === logos.length - 2 ? " and " : ""}
+              </span>
             ))}
-          </ul>
+            , alongside a few hundred homeowners across the Klang Valley and Singapore.
+          </p>
         </Reveal>
       </Container>
     </section>

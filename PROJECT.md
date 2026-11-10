@@ -5,6 +5,10 @@ A conversion landing page for a sanitary ware brand, built with the `landing-pag
 
 Strategy, copy, FAQ and SEO decisions live in `LANDING_BRIEF.md`.
 
+There are two designs of the same page:
+- `/` — light, calm version (the indexed home page)
+- `/motion` — dark, motion led variant for comparison (`noindex`, canonical `/`)
+
 ## Technology stack
 - Next.js 16 App Router, React 19, TypeScript
 - Tailwind CSS 4 with design tokens and named text styles in `src/app/globals.css`
@@ -15,7 +19,9 @@ Strategy, copy, FAQ and SEO decisions live in `LANDING_BRIEF.md`.
 ## Folder structure
 - `src/app`: home page, layout and metadata, `/privacy`, `/terms`, branded 404, `icon.svg`, generated `opengraph-image`, `robots`, `sitemap`, and `api/consultation`
 - `src/components/layout`: floating nav with mobile panel, footer
-- `src/components/sections`: one file per page section, in page order
+- `src/components/sections`: one file per home page section, in page order (`Faq` and `TaglineReveal` take a tone and are shared with `/motion`)
+- `src/components/motion`: sections and primitives for `/motion` (magnetic link, tilt card, curtain image, odometer, velocity marquee, pinned collection, stacked steps)
+- `src/lib/motion.ts`: shared scroll engine (one rAF throttled listener, weighted scrubbing, progress helpers)
 - `src/components/ui`: `Reveal`, `ButtonLink`, `Container`/`SectionHeader`, `BeforeAfter`, `ConsultationForm`, `LegalPage`
 - `src/lib/content.ts`: every piece of copy, price, stat, testimonial and image URL
 - `src/lib/consultation.ts`: form validation shared by the client and the API route
@@ -24,6 +30,8 @@ Strategy, copy, FAQ and SEO decisions live in `LANDING_BRIEF.md`.
 Hero → logo strip → problem to solution (before and after slider) → benefits → tagline reveal → collection → how it works → proof (stats and testimonials) → FAQ (with FAQPage JSON-LD) → final CTA with consultation form → footer.
 
 ## Design system
+- Editorial layout on the home page: a 12 column grid with numbered section labels in the left margin, headings offset into columns 4 to 12, hairline rules instead of card grids, a supplier ledger table, staggered product plates with captions, one featured pull quote and a dated timeline
+- Navigation is split into a logo pill on the left and a link pill on the right. This departs from the skill's single centred bar on purpose, because the centred layout read as a template
 - Light theme: ivory `#f6f4ef`, paper `#fbfaf7`, ink `#1b1a17`, muted `#5f5b53`, line `#e2ddd3`, brass `#a78652`
 - Dark bands use only the approved dark backgrounds: `#131209`, `#1f1f1f`, `#272727`, `#313131`
 - Text uses named styles only (`heading-1` … `caption-5`, plus `body-7` for lead paragraphs), all on Tailwind's type scale
@@ -33,6 +41,7 @@ Hero → logo strip → problem to solution (before and after slider) → benefi
 - Main buttons: 8px by 12px padding, `button-md`, pill radius
 
 ## Motion
+- `/motion` adds pinned scroll scrubbing, a velocity marquee, 3D tilt, curtain reveals, odometer stats and tap ripples; see `LANDING_BRIEF.md` for the full motion map
 - Base curve `cubic-bezier(0.22, 1, 0.36, 1)` (`ease-soft`), also set as Tailwind's default transition curve
 - Sections rise 32px and fade in once via `Reveal` (IntersectionObserver); content stays visible without JavaScript
 - Tagline words brighten one at a time from a rAF throttled scroll listener that only runs while the section is on screen
@@ -56,6 +65,7 @@ Aurelia Bath is fictional. Every name, price, statistic, testimonial, address de
 ## Validation status
 - ESLint, TypeScript and `next build`: passing
 - Browser QA at 1280px and 390px: no horizontal overflow, primary CTA visible in the first screen on mobile, mobile menu, FAQ, form errors and form success verified; no console errors
+- `/motion` checked at 1280px and 390px, mid animation and with reduced motion emulated
 - `/does-not-exist` returns a 404 status with the branded page
 
 ## Run the project

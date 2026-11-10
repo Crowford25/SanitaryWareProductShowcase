@@ -18,7 +18,7 @@ const sizes: Record<Size, string> = {
 export const buttonClass = (variant: Variant = "primary", size: Size = "md") =>
   [
     "motion-move inline-flex items-center justify-center gap-2 rounded-full px-3 py-2 whitespace-nowrap",
-    "transition-[background-color,color,transform] duration-300 ease-soft",
+    "transition-[background-color,color,transform,translate,scale] duration-300 ease-soft",
     "hover:-translate-y-0.5 active:translate-y-0 active:scale-98",
     "disabled:pointer-events-none disabled:opacity-60",
     variants[variant],

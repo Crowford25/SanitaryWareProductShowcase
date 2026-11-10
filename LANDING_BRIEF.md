@@ -75,3 +75,32 @@ Built with the `landing-page-design` skill. Aurelia Bath is a fictional prototyp
 ## 7. Layout
 
 **A. Classic hero plus sections.** The product is physical and visual, so a hero photo of a finished room explains the offer in one look. The argument is short enough that a long form story (B) is not needed, and the traffic is not high intent enough for a minimal page (C).
+
+---
+
+# Variant B — Motion edition (`/motion`)
+
+Same offer, audience, proof and FAQ as the home page. A dark, motion led design to compare against the light version. It is `noindex` with a canonical pointing at `/`, so it never competes with the home page in search.
+
+## Hero copy
+
+- **Headline:** One room. One finish. One team.
+- **Subheadline:** Basins, mixers, baths, WCs and showers designed to match and planned around your floor plan. Your contractor gets the fitting drawings before tiling, so everything goes in right the first time.
+- **CTA:** Book a free consultation
+- **Proof:** Rated 4.8 by 517 homeowners
+
+## Page outline and motion map
+
+| Section | Motion |
+|---|---|
+| Hero | Headline lines rise out of a mask; ambient water ripples; a ripple drops wherever you tap; the photo opens from an inset card to full width as you scroll; magnetic CTA |
+| Specified by | Marquee that drifts on its own, speeds up with scroll velocity and reverses when you scroll up |
+| Problem to solution | Pinned scrub: five mismatched pieces from five suppliers drift into one aligned row, their swatches turn brass, and the story flips from problem to fix |
+| Benefits | Cards rise in a stagger and tilt toward the cursor in 3D; the photo is revealed by a lifting curtain |
+| Tagline | Light band; words rise and brighten one at a time |
+| Collection | Desktop pins and turns vertical scroll into a sideways track with parallax photos; phones get a native swipe row |
+| How it works | Step cards pin and stack; covered cards shrink back and dim |
+| Proof | Odometer digits roll into each stat; testimonial photos revealed by curtains |
+| FAQ, final CTA | Shared with the home page in a dark theme |
+
+All motion moves only `transform` and `opacity`, follows the base curve, runs from one shared rAF throttled scroll loop, and falls back to static, readable layouts under `prefers-reduced-motion` or without JavaScript.

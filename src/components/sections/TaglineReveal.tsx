@@ -12,7 +12,16 @@ const words = tagline.split(" ");
  * requestAnimationFrame, attached only while the section is on screen.
  * Reduced motion shows the final text straight away (see CSS below).
  */
-export default function TaglineReveal() {
+type TaglineRevealProps = {
+  /** Dark band (default) or light band. */
+  tone?: "dark" | "light";
+  /** Words also rise 8px as they light up. */
+  rise?: boolean;
+  /** Optional signature under the text, so it reads as someone's view. */
+  signedBy?: string;
+};
+
+export default function TaglineReveal({ tone = "dark", rise = false, signedBy }: TaglineRevealProps) {
   const textRef = useRef<HTMLHeadingElement>(null);
   const [lit, setLit] = useState(0);
 
@@ -61,24 +70,35 @@ export default function TaglineReveal() {
     };
   }, []);
 
+  const surface = tone === "dark" ? "bg-night text-on-night" : "bg-ivory text-ink";
+  const muted = tone === "dark" ? "text-on-night-muted" : "text-muted";
+
   return (
-    <section id="our-view" aria-label="Our view" className="bg-night py-24 text-on-night">
-      <Container>
-        <p className="caption-3 uppercase tracking-widest text-on-night-muted">Our view</p>
-        <h2 ref={textRef} className="mt-6 max-w-[680px] heading-4 md:heading-2" aria-label={tagline}>
-          {words.map((word, i) => (
-            <span
-              key={`${word}-${i}`}
-              aria-hidden="true"
-              className={`tagline-word transition-opacity duration-500 ease-soft ${
-                i < lit ? "opacity-100" : "opacity-30"
-              }`}
-            >
-              {word}
-              {i < words.length - 1 ? " " : ""}
-            </span>
-          ))}
-        </h2>
+    <section id="our-view" aria-label="Our view" className={`py-24 ${surface}`}>
+      <Container className="grid gap-6 lg:grid-cols-12 lg:gap-8">
+        <p className={`caption-3 uppercase tracking-widest lg:col-span-3 lg:pt-3 ${muted}`}>Our view</p>
+        <div className="lg:col-span-9">
+          <h2 ref={textRef} className="max-w-[680px] heading-4 md:heading-2" aria-label={tagline}>
+            {words.map((word, i) => (
+              <span key={`${word}-${i}`}>
+                <span
+                  aria-hidden="true"
+                  className={
+                    rise
+                      ? `tagline-word motion-move inline-block transition-[opacity,translate] duration-700 ease-soft ${
+                          i < lit ? "translate-y-0 opacity-100" : "translate-y-2 opacity-25"
+                        }`
+                      : `tagline-word transition-opacity duration-500 ease-soft ${i < lit ? "opacity-100" : "opacity-30"}`
+                  }
+                >
+                  {word}
+                </span>
+                {i < words.length - 1 ? " " : ""}
+              </span>
+            ))}
+          </h2>
+          {signedBy ? <p className={`mt-8 caption-2 ${muted}`}>{signedBy}</p> : null}
+        </div>
       </Container>
     </section>
   );

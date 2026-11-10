@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { ArrowUpIcon } from "@phosphor-icons/react/ssr";
-import { navLinks, site } from "@/lib/content";
+import { site } from "@/lib/content";
 import { Container } from "@/components/ui/Layout";
+import FooterExploreLinks from "@/components/layout/FooterExploreLinks";
 
 const linkClass =
   "rounded-sm body-6 text-on-night-muted transition-colors duration-300 ease-soft hover:text-on-night";
@@ -24,20 +25,7 @@ export default function SiteFooter() {
 
           <nav aria-label="Footer">
             <p className="caption-3 uppercase tracking-widest text-on-night-muted">Explore</p>
-            <ul className="mt-4 flex flex-col gap-3">
-              {navLinks.map(({ id, label }) => (
-                <li key={id}>
-                  <Link href={`/#${id}`} className={linkClass}>
-                    {label}
-                  </Link>
-                </li>
-              ))}
-              <li>
-                <Link href="/#book" className={linkClass}>
-                  {site.ctaShort}
-                </Link>
-              </li>
-            </ul>
+            <FooterExploreLinks className={linkClass} />
           </nav>
 
           <div>
