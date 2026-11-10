@@ -41,7 +41,8 @@ const themes = {
 };
 
 export default function SiteNav() {
-  const pathname = usePathname();
+  // trailingSlash is on for the static export, so "/motion/" and "/motion" are the same page.
+  const pathname = usePathname().replace(/\/+$/, "") || "/";
   const isLanding = pathname in landingPages;
   const base = isLanding ? pathname : "/";
   const t = themes[landingPages[pathname] ?? "light"];

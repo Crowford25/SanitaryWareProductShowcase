@@ -17,14 +17,16 @@ There are two designs of the same page:
 - No animation libraries: IntersectionObserver plus CSS transitions on one base curve
 
 ## Folder structure
-- `src/app`: home page, layout and metadata, `/privacy`, `/terms`, branded 404, `icon.svg`, generated `opengraph-image`, `robots`, `sitemap`, and `api/consultation`
+- `src/app`: home page, layout and metadata, `/privacy`, `/terms`, branded 404, `icon.svg`, `robots` and `sitemap` (static at build time)
+- `public/og-image.png`: the social sharing image, referenced from the layout metadata
 - `src/components/layout`: floating nav with mobile panel, footer
 - `src/components/sections`: one file per home page section, in page order (`Faq` and `TaglineReveal` take a tone and are shared with `/motion`)
 - `src/components/motion`: sections and primitives for `/motion` (magnetic link, tilt card, curtain image, odometer, velocity marquee, pinned collection, stacked steps)
 - `src/lib/motion.ts`: shared scroll engine (one rAF throttled listener, weighted scrubbing, progress helpers)
 - `src/components/ui`: `Reveal`, `ButtonLink`, `Container`/`SectionHeader`, `BeforeAfter`, `ConsultationForm`, `LegalPage`
 - `src/lib/content.ts`: every piece of copy, price, stat, testimonial and image URL
-- `src/lib/consultation.ts`: form validation shared by the client and the API route
+- `src/lib/consultation.ts`: form validation
+- `src/lib/submitConsultation.ts`: sends the booking form to `NEXT_PUBLIC_FORM_ENDPOINT` (for example Formspree), or opens a pre-filled email when none is set
 
 ## Page structure
 Hero → logo strip → problem to solution (before and after slider) → benefits → tagline reveal → collection → how it works → proof (stats and testimonials) → FAQ (with FAQPage JSON-LD) → final CTA with consultation form → footer.
@@ -52,15 +54,15 @@ Hero → logo strip → problem to solution (before and after slider) → benefi
 Aurelia Bath is fictional. Every name, price, statistic, testimonial, address detail and logo in `src/lib/content.ts` is a believable sample and must be replaced with real, verified data before launch.
 
 ## Remaining work before launch
-- Connect `src/app/api/consultation/route.ts` to the CRM or booking system (it currently validates and returns a reference only)
+- Create a form service endpoint (for example Formspree) and save it as the `FORM_ENDPOINT` repository variable; until then the form opens the visitor's email app
 - Replace Unsplash photography with licensed product and project photography
 - Have the privacy policy and terms reviewed by counsel
-- Set `NEXT_PUBLIC_SITE_URL` so canonical, sitemap and OG URLs use the production domain
 - Add a cookie banner only if analytics or advertising cookies are introduced
 
 ## Known issues
 - Most photos are remote Unsplash assets and need a network connection; the hero photo is local (`public/images/hero-bathroom.jpg`)
-- The OG image uses the default `next/og` font, not Manrope
+- The sharing image (`public/og-image.png`) uses a default sans font, not Manrope; regenerate it if the headline changes
+- Images are served unoptimized because GitHub Pages has no image server
 
 ## Validation status
 - ESLint, TypeScript and `next build`: passing
@@ -72,4 +74,13 @@ Aurelia Bath is fictional. Every name, price, statistic, testimonial, address de
 1. `npm install`
 2. `npm run dev`
 3. Open the local URL shown by Next.js.
-4. `npm run lint` and `npm run build` validate the project.
+4. `npm run lint` and `npm run build` validate the project. `npm run build` writes the static site to `out/`; `npm start` does not apply to a static export.
+
+## Deployment (GitHub Pages)
+The site is a static export (`output: "export"` in `next.config.ts`) published by `.github/workflows/deploy-pages.yml` on every push to `main`, or manually from the Actions tab.
+
+One time setup:
+1. Repository Settings > Pages > Build and deployment > Source: **GitHub Actions**.
+2. Optional: Settings > Secrets and variables > Actions > Variables > `FORM_ENDPOINT` with your form service URL.
+
+The workflow sets `NEXT_PUBLIC_BASE_PATH` (`/SanitaryWareProductShowcase`) and `NEXT_PUBLIC_SITE_URL` (`https://crowford25.github.io/SanitaryWareProductShowcase`) from the Pages configuration, so links, assets, canonical URLs and sharing tags resolve under the project path. Locally both are empty and the site runs at the root.

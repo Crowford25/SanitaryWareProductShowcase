@@ -1,9 +1,11 @@
 "use client";
 
+import Link from "next/link";
 import { useRef, useState, type FormEvent } from "react";
 import { ArrowRightIcon, CaretDownIcon, CheckCircleIcon, StorefrontIcon, VideoCameraIcon, WarningCircleIcon } from "@phosphor-icons/react";
 import { meetingTypes, projectTypes, validateConsultation, type ConsultationRequest, type FieldErrors } from "@/lib/consultation";
 import { site } from "@/lib/content";
+import { submitConsultation, type Delivery } from "@/lib/submitConsultation";
 import { buttonClass } from "@/components/ui/ButtonLink";
 
 type Status = "idle" | "submitting" | "success" | "error";
@@ -37,7 +39,7 @@ export default function ConsultationForm() {
   const [errors, setErrors] = useState<FieldErrors>({});
   const [attempted, setAttempted] = useState(false);
   const [status, setStatus] = useState<Status>("idle");
-  const [reference, setReference] = useState("");
+  const [delivery, setDelivery] = useState<Delivery>("sent");
   const formRef = useRef<HTMLFormElement>(null);
   const successRef = useRef<HTMLDivElement>(null);
 
@@ -67,20 +69,7 @@ export default function ConsultationForm() {
 
     setStatus("submitting");
     try {
-      const res = await fetch("/api/consultation", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
-      });
-      const data = await res.json().catch(() => ({}));
-      if (res.status === 422 && data.errors) {
-        setErrors(data.errors);
-        setStatus("idle");
-        focusFirstError(data.errors);
-        return;
-      }
-      if (!res.ok) throw new Error(`Request failed with ${res.status}`);
-      setReference(data.reference ?? "");
+      setDelivery(await submitConsultation(values));
       setStatus("success");
       requestAnimationFrame(() => successRef.current?.focus());
     } catch {
@@ -93,7 +82,6 @@ export default function ConsultationForm() {
     setErrors({});
     setAttempted(false);
     setStatus("idle");
-    setReference("");
   };
 
   const border = (key: keyof ConsultationRequest) =>
@@ -115,13 +103,25 @@ export default function ConsultationForm() {
         <span className="grid size-12 place-items-center rounded-full bg-brass/15 text-brass">
           <CheckCircleIcon aria-hidden="true" size={28} weight="fill" />
         </span>
-        <h3 className="mt-6 heading-5">Request received, {firstName}</h3>
-        <p className="mt-3 body-6 text-on-night-muted">
-          We will call {values.phone.trim()} within one working day to confirm a time for your{" "}
-          {isVideo ? "video consultation" : "showroom visit in Bangsar"}. If the time does not suit you, reply to our
-          call or email {site.email}.
-        </p>
-        {reference ? <p className="mt-4 caption-3 uppercase tracking-widest text-on-night-muted">Reference {reference}</p> : null}
+        {delivery === "sent" ? (
+          <>
+            <h3 className="mt-6 heading-5">Request received, {firstName}</h3>
+            <p className="mt-3 body-6 text-on-night-muted">
+              We will call {values.phone.trim()} within one working day to confirm a time for your{" "}
+              {isVideo ? "video consultation" : "showroom visit in Bangsar"}. If the time does not suit you, reply to our
+              call or email {site.email}.
+            </p>
+          </>
+        ) : (
+          <>
+            <h3 className="mt-6 heading-5">One last step, {firstName}</h3>
+            <p className="mt-3 body-6 text-on-night-muted">
+              Your email app should have opened with your request filled in. Send that email and we will call{" "}
+              {values.phone.trim()} within one working day to set a time for your{" "}
+              {isVideo ? "video consultation" : "showroom visit in Bangsar"}. If nothing opened, write to {site.email}.
+            </p>
+          </>
+        )}
         <button type="button" onClick={reset} className={`${buttonClass("outline", "sm")} mt-8 border-night-4 text-on-night hover:bg-night-3`}>
           Send another request
         </button>
@@ -307,9 +307,9 @@ export default function ConsultationForm() {
       </button>
       <p className="mt-3 caption-5 text-on-night-muted">
         We only use your details to arrange the consultation. Read our{" "}
-        <a href="/privacy" className="underline underline-offset-4 transition-colors duration-300 ease-soft hover:text-on-night">
+        <Link href="/privacy" className="underline underline-offset-4 transition-colors duration-300 ease-soft hover:text-on-night">
           privacy policy
-        </a>
+        </Link>
         .
       </p>
     </form>
