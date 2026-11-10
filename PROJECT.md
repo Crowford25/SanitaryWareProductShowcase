@@ -1,61 +1,62 @@
 # AURELIA BATH — Project Guide
 
 ## Purpose
-A premium, motion-led sanitary ware brand presentation and lead-generation landing page. It is intentionally not an e-commerce application.
+A conversion landing page for a sanitary ware brand, built with the `landing-page-design` skill. One offer, one audience, one action: homeowners in Malaysia and Singapore book a free bathroom design consultation. It is intentionally not an e-commerce application.
+
+Strategy, copy, FAQ and SEO decisions live in `LANDING_BRIEF.md`.
 
 ## Technology stack
 - Next.js 16 App Router, React 19, TypeScript
-- Tailwind CSS 4 plus a project-specific global design layer
-- GSAP + ScrollTrigger for pinned, scrubbed and staged scroll sequences
-- Framer Motion for entrances, state transitions, counters and micro-interactions
-- Lenis for smooth scrolling
-- Lucide React for restrained interface iconography
+- Tailwind CSS 4 with design tokens and named text styles in `src/app/globals.css`
+- Manrope via `next/font/google` (the only typeface)
+- Phosphor icons (`@phosphor-icons/react`, `/ssr` entry in server components)
+- No animation libraries: IntersectionObserver plus CSS transitions on one base curve
 
 ## Folder structure
-- `src/app`: route, metadata and global design system
-- `src/components/layout`: navigation and footer
-- `src/components/sections`: each major narrative section
-- `src/components/ui`: smooth scroll, cursor, magnetic button, progress and section title primitives
-- `src/lib/constants.ts`: replaceable image URLs and collection/product data
+- `src/app`: home page, layout and metadata, `/privacy`, `/terms`, branded 404, `icon.svg`, generated `opengraph-image`, `robots`, `sitemap`, and `api/consultation`
+- `src/components/layout`: floating nav with mobile panel, footer
+- `src/components/sections`: one file per page section, in page order
+- `src/components/ui`: `Reveal`, `ButtonLink`, `Container`/`SectionHeader`, `BeforeAfter`, `ConsultationForm`, `LegalPage`
+- `src/lib/content.ts`: every piece of copy, price, stat, testimonial and image URL
+- `src/lib/consultation.ts`: form validation shared by the client and the API route
+
+## Page structure
+Hero → logo strip → problem to solution (before and after slider) → benefits → tagline reveal → collection → how it works → proof (stats and testimonials) → FAQ (with FAQPage JSON-LD) → final CTA with consultation form → footer.
 
 ## Design system
-- Palette: ivory `#f2eee5`, warm white `#f8f6f1`, stone `#cbc4b8`, charcoal `#20211f`, muted brass `#a78652`
-- Display type: Didot/Bodoni/Georgia serif stack; UI type: Arial/Helvetica grotesk stack
-- Editorial grids, sharp image edges, restrained rules, minimal radius and generous whitespace
-- Breakpoints are shaped around content at 1100px, 900px, 768px and 560px
+- Light theme: ivory `#f6f4ef`, paper `#fbfaf7`, ink `#1b1a17`, muted `#5f5b53`, line `#e2ddd3`, brass `#a78652`
+- Dark bands use only the approved dark backgrounds: `#131209`, `#1f1f1f`, `#272727`, `#313131`
+- Text uses named styles only (`heading-1` … `caption-5`, plus `body-7` for lead paragraphs), all on Tailwind's type scale
+- Spacing uses only the 2, 4, 8, 12, 16, 24, 32, 40, 48, 64, 80, 96 px scale
+- Nested radii follow outer minus gap (for example a `rounded-2xl` card with 8px padding holds `rounded-lg` images)
+- No background gradients; the hero heading is the only gradient, and only on text
+- Main buttons: 8px by 12px padding, `button-md`, pill radius
 
-## Animation strategy
-- GSAP: hero timeline/parallax, desktop pinned horizontal collection, staged FORMA story, fullscreen image expansion
-- Framer Motion: reusable reveal motions, collection/material entrances, finish transitions, navigation, counters and magnetic controls
-- CSS: marquee, link underline, image hover zoom, scroll cue
-- Motion is disabled or simplified through `prefers-reduced-motion`; expensive cursor and pinned effects are disabled on touch/smaller screens
-- Every GSAP context and ScrollTrigger is reverted on unmount
+## Motion
+- Base curve `cubic-bezier(0.22, 1, 0.36, 1)` (`ease-soft`), also set as Tailwind's default transition curve
+- Sections rise 32px and fade in once via `Reveal` (IntersectionObserver); content stays visible without JavaScript
+- Tagline words brighten one at a time from a rAF throttled scroll listener that only runs while the section is on screen
+- Mobile menu: full height blurred panel, links stagger 60ms apart, capped at 400ms
+- `prefers-reduced-motion` removes all movement and shows the tagline at full colour
 
-## Completed sections
-Hero, brand philosophy, editorial collections, horizontal product gallery, FORMA 01 story, materials, before/after comparison, faucet finish customizer, craftsmanship, animated statistics, architect projects, fullscreen transition, marquee, testimonials, contact CTA, responsive navigation, custom cursor and footer.
+## Prototype data
+Aurelia Bath is fictional. Every name, price, statistic, testimonial, address detail and logo in `src/lib/content.ts` is a believable sample and must be replaced with real, verified data before launch.
 
-## Remaining work
-No core feature is intentionally unfinished. Production launch would replace prototype Unsplash photography with licensed campaign assets, connect lead buttons to the brand's preferred CRM, and add final legal/privacy routes.
+## Remaining work before launch
+- Connect `src/app/api/consultation/route.ts` to the CRM or booking system (it currently validates and returns a reference only)
+- Replace Unsplash photography with licensed product and project photography
+- Have the privacy policy and terms reviewed by counsel
+- Set `NEXT_PUBLIC_SITE_URL` so canonical, sitemap and OG URLs use the production domain
+- Add a cookie banner only if analytics or advertising cookies are introduced
 
 ## Known issues
-- Prototype images are remote Unsplash assets and require a network connection.
-- Finish switching uses art-directed color treatment on one prototype faucet image; production should use dedicated transparent product renders for each finish.
+- Most photos are remote Unsplash assets and need a network connection; the hero photo is local (`public/images/hero-bathroom.jpg`)
+- The OG image uses the default `next/og` font, not Manrope
 
 ## Validation status
-- ESLint: passing
-- TypeScript (`tsc --noEmit`): passing
-- Next.js production build: passing
-- Browser QA: verified at 1920px desktop, 768px tablet, and 430px mobile; mobile menu and finish selection interactions verified; no browser console errors
-
-## Asset reliability
-- The cinematic fullscreen transition uses `public/images/transition-bathroom.jpg` locally after the original prototype URL became unavailable.
-- The transformation comparison uses distinct local `before-bathroom.jpg` and `after-bathroom.jpg` assets so a remote failure cannot reveal the same underlying image on both sides.
-
-## Validation status
-- ESLint: passing
-- TypeScript (`tsc --noEmit`): passing
-- Next.js production build: passing
-- Browser QA: verified at 1920px desktop, 768px tablet, and 430px mobile; mobile menu and finish selection interactions verified; no browser console errors
+- ESLint, TypeScript and `next build`: passing
+- Browser QA at 1280px and 390px: no horizontal overflow, primary CTA visible in the first screen on mobile, mobile menu, FAQ, form errors and form success verified; no console errors
+- `/does-not-exist` returns a 404 status with the branded page
 
 ## Run the project
 1. `npm install`

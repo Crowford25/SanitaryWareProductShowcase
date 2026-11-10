@@ -1,48 +1,42 @@
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
-import CustomCursor from "@/components/ui/CustomCursor";
-import SmoothScroll from "@/components/ui/SmoothScroll";
-import ScrollProgress from "@/components/ui/ScrollProgress";
+import { faqs } from "@/lib/content";
 import Hero from "@/components/sections/Hero";
-import BrandIntro from "@/components/sections/BrandIntro";
-import Collections from "@/components/sections/Collections";
-import HorizontalCollection from "@/components/sections/HorizontalCollection";
-import ProductStory from "@/components/sections/ProductStory";
-import Materials from "@/components/sections/Materials";
-import Transformation from "@/components/sections/Transformation";
-import ProductCustomizer from "@/components/sections/ProductCustomizer";
-import Craftsmanship from "@/components/sections/Craftsmanship";
-import Statistics from "@/components/sections/Statistics";
-import Projects from "@/components/sections/Projects";
-import FullBleedTransition from "@/components/sections/FullBleedTransition";
-import Marquee from "@/components/sections/Marquee";
-import Testimonials from "@/components/sections/Testimonials";
-import ContactCTA from "@/components/sections/ContactCTA";
+import LogoStrip from "@/components/sections/LogoStrip";
+import ProblemSolution from "@/components/sections/ProblemSolution";
+import Benefits from "@/components/sections/Benefits";
+import TaglineReveal from "@/components/sections/TaglineReveal";
+import Collection from "@/components/sections/Collection";
+import HowItWorks from "@/components/sections/HowItWorks";
+import Proof from "@/components/sections/Proof";
+import Faq from "@/components/sections/Faq";
+import FinalCta from "@/components/sections/FinalCta";
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map(({ q, a }) => ({
+    "@type": "Question",
+    name: q,
+    acceptedAnswer: { "@type": "Answer", text: a },
+  })),
+};
 
 export default function Home() {
   return (
-    <SmoothScroll>
-      <ScrollProgress />
-      <CustomCursor />
-      <Navbar />
-      <main>
-        <Hero />
-        <BrandIntro />
-        <Collections />
-        <HorizontalCollection />
-        <ProductStory />
-        <Materials />
-        <Transformation />
-        <ProductCustomizer />
-        <Craftsmanship />
-        <Statistics />
-        <Projects />
-        <FullBleedTransition />
-        <Marquee />
-        <Testimonials />
-        <ContactCTA />
-      </main>
-      <Footer />
-    </SmoothScroll>
+    <main id="main">
+      <Hero />
+      <LogoStrip />
+      <ProblemSolution />
+      <Benefits />
+      <TaglineReveal />
+      <Collection />
+      <HowItWorks />
+      <Proof />
+      <Faq />
+      <FinalCta />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema).replace(/</g, "\\u003c") }}
+      />
+    </main>
   );
 }

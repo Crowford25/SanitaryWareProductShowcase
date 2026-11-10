@@ -1,1 +1,0 @@
-export default function Marquee() { const text = "FORM · FUNCTION · MATERIAL · WATER · SPACE · RITUAL · "; return <section className="marquee" aria-label="Aurelia design principles"><div><span>{text}</span><span aria-hidden="true">{text}</span></div></section>; }
